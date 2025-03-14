@@ -2,15 +2,63 @@
 
 // Run when document is ready
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize dashboard
-    initializeDashboard();
+    try {
+      // Initialize dashboard
+      initializeDashboard();
+      
+      // Set up event listeners
+      setupEventListeners();
+      
+      // Setup online/offline detection
+      setupNetworkDetection();
+    } catch (error) {
+      console.error('Dashboard initialization error:', error);
+      showErrorMessage('Could not initialize dashboard. Please refresh the page.');
+    }
+});
+
+// Show error message to user
+function showErrorMessage(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    document.body.prepend(errorDiv);
     
-    // Set up event listeners
-    setupEventListeners();
-  });
+    // Auto-remove after 5 seconds
+    setTimeout(() => errorDiv.remove(), 5000);
+}
+
+// Setup network status detection
+function setupNetworkDetection() {
+    function updateOnlineStatus() {
+        const status = navigator.onLine ? 'online' : 'offline';
+        document.body.dataset.networkStatus = status;
+        
+        const statusMessage = document.getElementById('network-status') || 
+                            document.createElement('div');
+        
+        if (!document.getElementById('network-status')) {
+            statusMessage.id = 'network-status';
+            document.body.appendChild(statusMessage);
+        }
+        
+        statusMessage.className = status;
+        statusMessage.textContent = status === 'online' ? 
+            'Connected' : 'Offline - Changes will sync when connection is restored';
+        
+        // Auto-hide online message
+        if (status === 'online') {
+            setTimeout(() => statusMessage.classList.add('fade-out'), 2000);
+        }
+    }
+    
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus(); // Initial check
+}
   
-  // Initialize dashboard with current data
-  function initializeDashboard() {
+// Initialize dashboard with current data
+function initializeDashboard() {
     // Get current week and PRs
     const currentWeek = StorageManager.getCurrentWeek();
     const currentPRs = StorageManager.getPRs();
@@ -26,14 +74,14 @@ document.addEventListener('DOMContentLoaded', function() {
     displayPRs(currentPRs);
     
     // Show today's workout
-    showTodaysWorkout(currentWeek);
+    showDashboardWorkout(currentWeek);
     
     // Show weekly schedule
     showWeeklySchedule(currentWeek);
-  }
-  
-  // Populate week selector dropdown
-  function populateWeekSelector(selector, currentWeek) {
+}
+
+// Populate week selector dropdown
+function populateWeekSelector(selector, currentWeek) {
     selector.innerHTML = '';
     
     for (let i = 1; i <= 24; i++) {
@@ -110,8 +158,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Show today's workout or next workout
-  function showTodaysWorkout(week) {
+  // Show today's workout on dashboard
+function showDashboardWorkout(week) {
+    week = parseInt(week, 10);
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
     
@@ -120,73 +169,81 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Workouts are on days 1-4 (Monday to Thursday)
     if (dayOfWeek >= 1 && dayOfWeek <= 4) {
-      // Get today's workout
-      const workout = programData.generateWorkout(week, dayOfWeek, StorageManager.getPRs());
-      
-      if (workout) {
-        // Check if workout is completed
-        const isCompleted = StorageManager.isWorkoutCompleted(week, dayOfWeek);
-        
-        // Create workout card content
-        const cardHeader = document.createElement('div');
-        cardHeader.className = 'card-header';
-        
-        const dayLabel = document.createElement('h3');
-        dayLabel.textContent = `Day ${dayOfWeek}: ${workout.title}`;
-        
-        const statusBadge = document.createElement('span');
-        statusBadge.className = isCompleted ? 'badge completed' : 'badge';
-        statusBadge.textContent = isCompleted ? 'Completed' : 'Today';
-        
-        cardHeader.appendChild(dayLabel);
-        cardHeader.appendChild(statusBadge);
-        
-        const cardBody = document.createElement('div');
-        cardBody.className = 'card-body';
-        
-        // Add primary lifts preview
-        if (workout.mainLifts && workout.mainLifts.length > 0) {
-          const primaryLifts = document.createElement('div');
-          primaryLifts.className = 'primary-lifts-preview';
-          
-          const lift = workout.mainLifts[0];
-          if (lift.isTestProtocol) {
-            primaryLifts.textContent = 'PR Testing Day';
-          } else {
-            primaryLifts.textContent = `${lift.name}: ${lift.sets} × ${lift.reps}`;
-          }
-          
-          cardBody.appendChild(primaryLifts);
+        try {
+            // Get today's workout
+            const workout = programData.generateWorkout(week, dayOfWeek, StorageManager.getPRs());
+            
+            if (workout) {
+                // Check if workout is completed
+                const isCompleted = StorageManager.isWorkoutCompleted(week, dayOfWeek);
+                
+                // Create workout card with document fragment for better performance
+                const fragment = document.createDocumentFragment();
+                
+                const cardHeader = document.createElement('div');
+                cardHeader.className = 'card-header';
+                
+                const dayLabel = document.createElement('h3');
+                dayLabel.textContent = `Day ${dayOfWeek}: ${workout.title}`;
+                
+                const statusBadge = document.createElement('span');
+                statusBadge.className = isCompleted ? 'badge completed' : 'badge';
+                statusBadge.textContent = isCompleted ? 'Completed' : 'Today';
+                
+                cardHeader.appendChild(dayLabel);
+                cardHeader.appendChild(statusBadge);
+                fragment.appendChild(cardHeader);
+                
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body';
+                
+                // Add primary lifts preview
+                if (workout.mainLifts && workout.mainLifts.length > 0) {
+                    const primaryLifts = document.createElement('div');
+                    primaryLifts.className = 'primary-lifts-preview';
+                    
+                    const lift = workout.mainLifts[0];
+                    if (lift.isTestProtocol) {
+                        primaryLifts.textContent = 'PR Testing Day';
+                    } else {
+                        primaryLifts.textContent = `${lift.name}: ${lift.sets} × ${lift.reps}`;
+                    }
+                    
+                    cardBody.appendChild(primaryLifts);
+                }
+                
+                fragment.appendChild(cardBody);
+                workoutCard.appendChild(fragment);
+                
+                // Update start workout button
+                const startButton = document.getElementById('start-workout');
+                startButton.textContent = isCompleted ? 'Review Workout' : 'Start Workout';
+                startButton.onclick = function() {
+                    navigateToWorkout(week, dayOfWeek);
+                };
+            }
+        } catch (error) {
+            console.error('Error loading today\'s workout:', error);
+            workoutCard.innerHTML = '<p class="error">Could not load workout details</p>';
         }
-        
-        workoutCard.appendChild(cardHeader);
-        workoutCard.appendChild(cardBody);
+    } else {
+        // Show next workout (next Monday)
+        const nextWorkout = document.createElement('div');
+        nextWorkout.className = 'rest-day';
+        nextWorkout.innerHTML = `<h3>Rest Day</h3><p>Next workout: Monday (Day 1)</p>`;
+        workoutCard.appendChild(nextWorkout);
         
         // Update start workout button
         const startButton = document.getElementById('start-workout');
-        startButton.textContent = isCompleted ? 'Review Workout' : 'Start Workout';
+        startButton.textContent = 'View Next Workout';
         startButton.onclick = function() {
-          showTodaysWorkout(week, dayOfWeek);
+            navigateToWorkout(week, 1); // Monday
         };
-      }
-    } else {
-      // Show next workout (next Monday)
-      const nextWorkout = document.createElement('div');
-      nextWorkout.className = 'rest-day';
-      nextWorkout.innerHTML = `<h3>Rest Day</h3><p>Next workout: Monday (Day 1)</p>`;
-      workoutCard.appendChild(nextWorkout);
-      
-      // Update start workout button
-      const startButton = document.getElementById('start-workout');
-      startButton.textContent = 'View Next Workout';
-      startButton.onclick = function() {
-        showTodaysWorkout(week, 1); // Monday
-      };
     }
-  }
-  
-  // Show weekly schedule
-  function showWeeklySchedule(week) {
+}
+
+// Show weekly schedule
+function showWeeklySchedule(week) {
     week = parseInt(week, 10);
     const scheduleGrid = document.getElementById('weekly-schedule');
     scheduleGrid.innerHTML = '';
@@ -194,56 +251,65 @@ document.addEventListener('DOMContentLoaded', function() {
     const today = new Date();
     const currentDayOfWeek = today.getDay();
     
+    // Use document fragment for better performance
+    const fragment = document.createDocumentFragment();
+    
     for (let i = 1; i <= 4; i++) {
-      const dayElement = document.createElement('div');
-      dayElement.className = 'schedule-day';
-      
-      // Add active class if this is today
-      if (i === currentDayOfWeek) {
-        dayElement.classList.add('active');
-      }
-      
-      // Add completed class if workout is done
-      if (StorageManager.isWorkoutCompleted(week, i)) {
-        dayElement.classList.add('completed');
-      }
-      
-      // Get the workout for this day
-      const workout = programData.generateWorkout(week, i, StorageManager.getPRs());
-      
-      dayElement.textContent = `Day ${i}: ${workout ? workout.title : 'Rest'}`;
-      
-      // Make clickable
-      dayElement.addEventListener('click', function() {
-        showTodaysWorkout(week, i);
-      });
-      
-      scheduleGrid.appendChild(dayElement);
+        try {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'schedule-day';
+            
+            // Add active class if this is today
+            if (i === currentDayOfWeek) {
+                dayElement.classList.add('active');
+            }
+            
+            // Add completed class if workout is done
+            if (StorageManager.isWorkoutCompleted(week, i)) {
+                dayElement.classList.add('completed');
+            }
+            
+            // Get the workout for this day
+            const workout = programData.generateWorkout(week, i, StorageManager.getPRs());
+            
+            dayElement.textContent = `Day ${i}: ${workout ? workout.title : 'Rest'}`;
+            
+            // Make clickable
+            dayElement.addEventListener('click', function() {
+                navigateToWorkout(week, i);
+            });
+            
+            fragment.appendChild(dayElement);
+        } catch (error) {
+            console.error(`Error loading day ${i} schedule:`, error);
+        }
     }
-  }
-  
-  // Set up event listeners
-  function setupEventListeners() {
+    
+    scheduleGrid.appendChild(fragment);
+}
+
+// Set up event listeners
+function setupEventListeners() {
     // Week selector change
     document.getElementById('current-week').addEventListener('change', function() {
-      const selectedWeek = parseInt(this.value);
-      StorageManager.saveCurrentWeek(selectedWeek);
-      updatePhaseInfo(selectedWeek);
-      showTodaysWorkout(selectedWeek);
-      showWeeklySchedule(selectedWeek);
+        const selectedWeek = parseInt(this.value, 10);
+        StorageManager.saveCurrentWeek(selectedWeek);
+        updatePhaseInfo(selectedWeek);
+        showDashboardWorkout(selectedWeek);
+        showWeeklySchedule(selectedWeek);
     });
     
     // Update PRs button
     document.getElementById('update-prs').addEventListener('click', function() {
-      window.location.href = 'settings.html';
+        window.location.href = 'settings.html';
     });
-  }
-  
-  // In the showTodaysWorkout function
-  function showTodaysWorkout(week, day) {
+}
+
+// Single function for navigating to workout page
+function navigateToWorkout(week, day) {
     // Ensure week and day are numbers
-    week = parseInt(week, 10);
-    day = parseInt(day, 10);
+    week = parseInt(week, 10) || StorageManager.getCurrentWeek();
+    day = parseInt(day, 10) || 1;
     
     // Store in session for the workout page
     sessionStorage.setItem('currentWorkoutWeek', week);
@@ -251,4 +317,4 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Navigate to workout page
     window.location.href = 'workout.html';
-  }
+}

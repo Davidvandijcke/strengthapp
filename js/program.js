@@ -2,7 +2,7 @@
 
 // Program data structure
 const programData = {
-    // Default PRs
+    // Default PRs: 
     defaultPRs: {
       benchPress: 245,
       backSquat: 305,
@@ -851,6 +851,203 @@ const programData = {
         ];
       }
       
+      return workout;
+    },
+
+    generateDeadliftDay: function(week, phase, intensity, prs) {
+      const workout = {
+        title: "Deadlift Day",
+        phase: phase,
+        warmup: [
+          "Bike × 5:00",
+          "10 Cat-Cow Stretches",
+          "10 Glute Bridges",
+          "10 Bird Dogs (each side)",
+          "10 Banded Good Mornings",
+          "Hip Flexor Stretch: 30s each side",
+          "10 Light KB Swings"
+        ],
+        mainLifts: [],
+        accessoryWork: [],
+        notes: []
+      };
+      
+      if (phase === "Deload") {
+        workout.mainLifts = [
+          {
+            name: "Deadlift",
+            sets: 3,
+            reps: 5,
+            percentOfMax: 0.6,
+            prReference: "deadlift",
+            notes: "Focus on technique and recovery"
+          }
+        ];
+        
+        workout.accessoryWork = [
+          {
+            name: "Romanian Deadlift",
+            sets: 2,
+            reps: 8,
+            intensity: "Light",
+            notes: "Maintain neutral spine"
+          },
+          {
+            name: "Single-Leg RDL",
+            sets: 2,
+            reps: "8/8",
+            intensity: "Light",
+            notes: "Focus on balance"
+          }
+        ];
+        
+        workout.notes = [
+          "Deload week: Focus on recovery and technique refinement.",
+          "Keep weights light and avoid training to failure."
+        ];
+      } 
+      else if (phase === "Testing") {
+        workout.mainLifts = [
+          {
+            name: "DEADLIFT PR PROTOCOL",
+            sets: [
+              { setNum: 1, reps: 5, percentOfMax: 0.45, prReference: "deadlift", notes: "Warm-up" },
+              { setNum: 2, reps: 3, percentOfMax: 0.65, prReference: "deadlift", notes: "Warm-up" },
+              { setNum: 3, reps: 2, percentOfMax: 0.75, prReference: "deadlift", notes: "Warm-up" },
+              { setNum: 4, reps: 1, percentOfMax: 0.85, prReference: "deadlift", notes: "First working set" },
+              { setNum: 5, reps: 1, percentOfMax: 0.9, prReference: "deadlift", notes: "Second working set" },
+              { setNum: 6, reps: 1, percentOfMax: 0.95, prReference: "deadlift", notes: "Third working set" },
+              { setNum: 7, reps: 1, percentOfMax: 1.0, prReference: "deadlift", notes: "Current PR" },
+              { setNum: 8, reps: 1, percentOfMax: 1.025, prReference: "deadlift", notes: "New PR attempt" }
+            ],
+            isTestProtocol: true
+          }
+        ];
+        
+        workout.notes = [
+          "PR TESTING PROTOCOL:",
+          "- Warm up thoroughly with gradually increasing weights",
+          "- Take 3-5 minutes rest between sets above 85% of 1RM",
+          "- Have a spotter available for safety",
+          "- Record your PR attempts in the PR Tracker"
+        ];
+      }
+      else if (phase === "Hypertrophy") {
+        const weekInMeso = (parseInt(week) <= 3) ? parseInt(week) : (parseInt(week) - 12);
+        const reps = 10 - ((weekInMeso - 1) * 2); // 10->8->6
+        
+        workout.mainLifts = [
+          {
+            name: "Deadlift",
+            sets: 4,
+            reps: reps,
+            percentOfMax: intensity,
+            prReference: "deadlift",
+            notes: "Control eccentric, 2 min rest"
+          }
+        ];
+        
+        const accReps = 12 - ((weekInMeso - 1) * 2); // 12->10->8
+        
+        workout.accessoryWork = [
+          {
+            name: "Barbell Row",
+            sets: 3,
+            reps: accReps,
+            intensity: "Medium-Heavy",
+            notes: "Control the eccentric"
+          },
+          {
+            name: "Pull-ups",
+            sets: 3,
+            reps: "AMRAP",
+            intensity: "Bodyweight",
+            notes: "Use assistance if needed"
+          },
+          {
+            name: "Hyperextensions",
+            sets: 3,
+            reps: accReps + 2,
+            intensity: "Light-Medium",
+            notes: "Full range of motion"
+          }
+        ];
+        
+        workout.notes = [
+          "HYPERTROPHY PHASE FOCUS:",
+          "- Control the eccentric portion of each lift",
+          "- Focus on muscle tension throughout each repetition",
+          "- Rest 90-120 seconds between main lift sets"
+        ];
+      }
+      else if (phase === "Strength" || phase === "Peaking" || phase === "Pre-Test") {
+        // Add appropriate content similar to other workout generators
+        // This follows the same pattern as the squat/press day functions
+        const weekInMeso = (parseInt(week) <= 6) ? (parseInt(week) - 3) : (parseInt(week) - 15);
+        const reps = phase === "Strength" ? (6 - (weekInMeso - 1)) : 
+                     phase === "Peaking" ? (5 - weekInMeso) :
+                     3; // Pre-test
+        
+        workout.mainLifts = [
+          {
+            name: "Deadlift",
+            sets: phase === "Pre-Test" ? 3 : 4,
+            reps: reps,
+            percentOfMax: intensity,
+            prReference: "deadlift",
+            notes: phase === "Pre-Test" ? "Perfect technique, 3 min rest" : 
+                   "Explosive concentric, 3 min rest"
+          }
+        ];
+        
+        // Add appropriate accessory work
+        workout.accessoryWork = [
+          {
+            name: "Barbell Row",
+            sets: 3,
+            reps: 6,
+            intensity: "Heavy",
+            notes: "Upper back strength"
+          },
+          {
+            name: "Pull-ups",
+            sets: 3,
+            reps: "6-8",
+            intensity: "Weighted",
+            notes: "Add weight if possible"
+          },
+          {
+            name: "Farmer's Walk",
+            sets: 3,
+            reps: "40m",
+            intensity: "Heavy",
+            notes: "Grip strength focus"
+          }
+        ];
+        
+        workout.notes = [
+          `${phase.toUpperCase()} PHASE FOCUS:`,
+          "- Generate maximum force from the floor",
+          "- Maintain rigid back position",
+          "- Rest 2-3 minutes between sets"
+        ];
+      }
+      
+      return workout;
+    },
+
+    generateBenchDay: function(week, phase, intensity, prs) {
+      const workout = {
+        title: "Bench Day",
+        phase: phase,
+        warmup: [
+          // Add warmup exercises
+        ],
+        mainLifts: [],
+        accessoryWork: [],
+        notes: []
+      };
+      // Add phase-specific exercise logic
       return workout;
     }
   };

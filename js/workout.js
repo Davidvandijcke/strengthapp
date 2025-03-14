@@ -29,7 +29,7 @@ function loadWorkout(week, day) {
   
   console.log('Loading workout for week:', week, 'day:', day);
   // Get workout data and PRs
-  const workout = programData.generateWorkout(week, day, StorageManager.getPRs());
+  const workout = programData.generateWorkout(parseInt(week, 10), parseInt(day, 10), StorageManager.getPRs());
   const settings = StorageManager.getSettings();
   const units = settings ? settings.units : 'lbs';
   
@@ -146,8 +146,8 @@ function displayMainLifts(mainLifts, week, day, units) {
         // Save set completion status when checkbox changes
         checkbox.addEventListener('change', function() {
           StorageManager.saveCompletedSet(
-            week, 
-            day, 
+            parseInt(week, 10), 
+            parseInt(day, 10), 
             this.dataset.exercise, 
             this.dataset.set, 
             this.checked
@@ -225,8 +225,8 @@ function displayMainLifts(mainLifts, week, day, units) {
         // Save set completion status when checkbox changes
         checkbox.addEventListener('change', function() {
           StorageManager.saveCompletedSet(
-            week, 
-            day, 
+            parseInt(week, 10), 
+            parseInt(day, 10), 
             this.dataset.exercise, 
             this.dataset.set, 
             this.checked
@@ -336,8 +336,8 @@ function displayAccessoryWork(accessories, week, day, mainLiftsLength) {
       // Save set completion status when checkbox changes
       checkbox.addEventListener('change', function() {
         StorageManager.saveCompletedSet(
-          week, 
-          day, 
+          parseInt(week, 10), 
+          parseInt(day, 10), 
           this.dataset.exercise, 
           this.dataset.set, 
           this.checked
@@ -487,7 +487,7 @@ function timerComplete() {
 function setupEventListeners(week, day) {
   // Complete workout button
   document.getElementById('complete-workout').addEventListener('click', function() {
-    StorageManager.markWorkoutComplete(week, day);
+    StorageManager.markWorkoutComplete(parseInt(week, 10), parseInt(day, 10));
     utils.showToast('Workout completed!', 'success');
     
     // Disable button after completion
