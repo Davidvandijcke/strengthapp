@@ -1,5 +1,8 @@
 // auth.js - Handle user authentication
 
+// TEMPORARY: Bypass authentication for development
+const BYPASS_AUTH = true;
+
 // Run when document is ready
 document.addEventListener('DOMContentLoaded', function() {
   // Check if user is already logged in
@@ -89,16 +92,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Authentication Manager
 const AuthManager = {
-  // Check if user is authenticated
+  // Override isAuthenticated to always return true during development
   isAuthenticated: function() {
+    if (BYPASS_AUTH) {
+      console.log("DEVELOPMENT MODE: Authentication bypassed");
+      return true;
+    }
+    
+    // Original authentication check
     const token = localStorage.getItem('auth_token');
     if (!token) return false;
     
-    // Check if token is expired
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       if (payload.exp < Date.now() / 1000) {
-        // Token expired, clear it
         this.logout();
         return false;
       }
@@ -234,8 +241,17 @@ const AuthManager = {
     // Don't clear program data, just authentication
   },
   
-  // Get user data
+  // Set default user data for development
   getUserData: function() {
+    if (BYPASS_AUTH) {
+      return {
+        name: "Dev User",
+        email: "dev@example.com",
+        id: "dev123"
+      };
+    }
+    
+    // Original user data retrieval
     try {
       return JSON.parse(localStorage.getItem('user_data'));
     } catch (e) {

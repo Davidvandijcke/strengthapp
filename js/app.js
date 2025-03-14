@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Dashboard initialization error:', error);
       showErrorMessage('Could not initialize dashboard. Please refresh the page.');
     }
+    updateAuthDisplay();
+    initDevEnvironment();
 });
 
 // Show error message to user
@@ -375,3 +377,58 @@ async function syncUserDataWithServer() {
         console.error('Error syncing with server:', error);
     }
 }
+
+// Display auth status in the UI
+function updateAuthDisplay() {
+  const authStatus = document.getElementById('auth-status');
+  const authButtons = document.getElementById('auth-buttons');
+  
+  if (AuthManager.isAuthenticated()) {
+    // Show authenticated UI
+    if (authStatus) {
+      authStatus.style.display = 'flex';
+      const userData = AuthManager.getUserData();
+      const userNameElement = document.getElementById('user-name');
+      if (userNameElement) {
+        userNameElement.textContent = userData ? userData.name : 'Dev User';
+      }
+    }
+    
+    if (authButtons) {
+      authButtons.style.display = 'none';
+    }
+    
+    // If we're in development bypass mode, show indicator
+    if (window.BYPASS_AUTH) {
+      const header = document.querySelector('header h1');
+      if (header) {
+        header.innerHTML = header.textContent + ' <span style="font-size:14px;color:#ff6b6b">[DEV MODE]</span>';
+      }
+    }
+  } else {
+    // Show non-authenticated UI
+    if (authStatus) authStatus.style.display = 'none';
+    if (authButtons) authButtons.style.display = 'flex';
+  }
+}
+
+// Initialize program data for development mode
+function initDevEnvironment() {
+  if (window.BYPASS_AUTH) {
+    // Make sure we have default PRs
+    if (!StorageManager.getPRs()) {
+      StorageManager.savePRs(programData.defaultPRs);
+    }
+    
+    // Set current week if not set
+    if (!StorageManager.getCurrentWeek()) {
+      StorageManager.saveCurrentWeek(1);
+    }
+    
+    console.log("Development environment initialized with default data");
+  }
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', updateAuthDisplay);
+document.addEventListener('DOMContentLoaded', initDevEnvironment);
