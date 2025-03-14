@@ -493,3 +493,105 @@
   .hidden {
     display: none;
   }
+  
+  /* Loading indicator */
+  .loading-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #2c3e50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Network status */
+  #network-status {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 5px;
+    text-align: center;
+    z-index: 900;
+    font-size: 0.8rem;
+    transition: opacity 0.5s ease-out;
+  }
+  
+  #network-status.online {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  #network-status.offline {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  #network-status.fade-out {
+    opacity: 0;
+  }
+  
+  /* Error message */
+  .error-message {
+    background-color: #f44336;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  /* Fix for the app.js structure issue */
+  [data-network-status="offline"] .requires-connection {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  
+  .error {
+    color: #f44336;
+    font-style: italic;
+  }
+  
+  /* Improve responsiveness for large screens */
+  @media screen and (min-width: 1200px) {
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+    
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 20px;
+    }
+    
+    .workout-section, .progress-section {
+      margin-bottom: 0;
+    }
+  }

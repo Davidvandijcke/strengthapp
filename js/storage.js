@@ -51,12 +51,36 @@ const StorageManager = {
     savePRs: function(prs) {
       localStorage.setItem(this.KEYS.CURRENT_PRs, JSON.stringify(prs));
       
-      // Also update PR history
+      // Update PR history
       const prHistory = this.getPRHistory();
       const today = new Date().toISOString().split('T')[0];
-      
       prHistory[today] = prs;
       this.savePRHistory(prHistory);
+      
+      // Sync with server if authenticated
+      if (AuthManager.isAuthenticated()) {
+        try {
+          const apiService = new ApiService();
+          apiService.setAuthToken(AuthManager.getToken());
+          
+          // Track this change to sync when connection is available
+          const unsyncedChanges = JSON.parse(localStorage.getItem('unsyncedChanges') || '{}');
+          unsyncedChanges.personalRecords = prs;
+          localStorage.setItem('unsyncedChanges', JSON.stringify(unsyncedChanges));
+          
+          // Try to sync immediately
+          apiService.updateUserProgress({ personalRecords: prs })
+            .then(() => {
+              // Clear this specific change on successful sync
+              const remainingChanges = JSON.parse(localStorage.getItem('unsyncedChanges') || '{}');
+              delete remainingChanges.personalRecords;
+              localStorage.setItem('unsyncedChanges', JSON.stringify(remainingChanges));
+            })
+            .catch(err => console.error('Error syncing PRs to server:', err));
+        } catch (error) {
+          console.error('Error preparing to sync:', error);
+        }
+      }
     },
     
     getPRHistory: function() {
@@ -66,6 +90,15 @@ const StorageManager = {
     
     savePRHistory: function(history) {
       localStorage.setItem(this.KEYS.PR_HISTORY, JSON.stringify(history));
+      
+      // If user is logged in (has token), sync with server
+      const token = localStorage.getItem('token');
+      if (token) {
+        const apiService = new ApiService();
+        apiService.setAuthToken(token);
+        apiService.updateUserProgress({ prHistory: history })
+          .catch(err => console.error('Error syncing PR history to server:', err));
+      }
     },
     
     // Current week functions
@@ -76,6 +109,15 @@ const StorageManager = {
     
     saveCurrentWeek: function(week) {
       localStorage.setItem(this.KEYS.CURRENT_WEEK, week.toString());
+      
+      // If user is logged in (has token), sync with server
+      const token = localStorage.getItem('token');
+      if (token) {
+        const apiService = new ApiService();
+        apiService.setAuthToken(token);
+        apiService.updateUserProgress({ currentWeek: week })
+          .catch(err => console.error('Error syncing week to server:', err));
+      }
     },
     
     // Completed workouts functions
@@ -86,6 +128,15 @@ const StorageManager = {
     
     saveCompletedWorkouts: function(workouts) {
       localStorage.setItem(this.KEYS.COMPLETED_WORKOUTS, JSON.stringify(workouts));
+      
+      // If user is logged in (has token), sync with server
+      const token = localStorage.getItem('token');
+      if (token) {
+        const apiService = new ApiService();
+        apiService.setAuthToken(token);
+        apiService.updateUserProgress({ completedWorkouts: workouts })
+          .catch(err => console.error('Error syncing completed workouts to server:', err));
+      }
     },
     
     markWorkoutComplete: function(week, day) {
@@ -125,6 +176,15 @@ const StorageManager = {
       
       sets[exerciseIndex][setIndex] = completed;
       localStorage.setItem(`${this.KEYS.COMPLETED_SETS}.${key}`, JSON.stringify(sets));
+      
+      // If user is logged in (has token), sync with server
+      const token = localStorage.getItem('token');
+      if (token) {
+        const apiService = new ApiService();
+        apiService.setAuthToken(token);
+        apiService.updateUserProgress({ completedSets: sets })
+          .catch(err => console.error('Error syncing completed sets to server:', err));
+      }
     },
     
     // Workout notes
@@ -136,6 +196,15 @@ const StorageManager = {
     saveWorkoutNotes: function(week, day, notes) {
       const key = `${this.KEYS.WORKOUT_NOTES}.${week}-${day}`;
       localStorage.setItem(key, notes);
+      
+      // If user is logged in (has token), sync with server
+      const token = localStorage.getItem('token');
+      if (token) {
+        const apiService = new ApiService();
+        apiService.setAuthToken(token);
+        apiService.updateUserProgress({ workoutNotes: notes })
+          .catch(err => console.error('Error syncing workout notes to server:', err));
+      }
     },
     
     // Settings functions
@@ -146,6 +215,15 @@ const StorageManager = {
     
     saveSettings: function(settings) {
       localStorage.setItem(this.KEYS.APP_SETTINGS, JSON.stringify(settings));
+      
+      // If user is logged in (has token), sync with server
+      const token = localStorage.getItem('token');
+      if (token) {
+        const apiService = new ApiService();
+        apiService.setAuthToken(token);
+        apiService.updateUserProgress({ settings })
+          .catch(err => console.error('Error syncing settings to server:', err));
+      }
     },
     
     // Data export/import

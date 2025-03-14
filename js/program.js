@@ -34,6 +34,8 @@ const programData = {
     
     // Generate workout template based on phase and week
     generateWorkout: function(week, day, prs) {
+      week = parseInt(week, 10);
+      day = parseInt(day, 10);
       // Determine phase and intensity for the week
       const phase = this.getPhaseForWeek(week);
       let intensity = this.getIntensityForWeek(week);
@@ -1041,13 +1043,153 @@ const programData = {
         title: "Bench Day",
         phase: phase,
         warmup: [
-          // Add warmup exercises
+          "Jump Rope × 2:00",
+          "10 Push-ups",
+          "10 Band Pull-aparts",
+          "10 Shoulder Dislocates",
+          "Foam Roll Upper Back",
+          "Shoulder Mobility Drill",
+          "10 Scap Push-ups"
         ],
         mainLifts: [],
         accessoryWork: [],
         notes: []
       };
-      // Add phase-specific exercise logic
+      
+      if (phase === "Deload") {
+        workout.mainLifts = [
+          {
+            name: "Bench Press",
+            sets: 3,
+            reps: 5,
+            percentOfMax: 0.6,
+            prReference: "benchPress",
+            notes: "Focus on technique and recovery"
+          }
+        ];
+        
+        workout.accessoryWork = [
+          {
+            name: "Dumbbell Row",
+            sets: 2,
+            reps: "8/8",
+            intensity: "Light",
+            notes: "Controlled movement"
+          },
+          {
+            name: "Tricep Pushdown",
+            sets: 2,
+            reps: 10,
+            intensity: "Light",
+            notes: "Full extension"
+          }
+        ];
+        
+        workout.notes = [
+          "This is a deload week. Focus on recovery and technique.",
+          "Keep weights light and avoid training to failure."
+        ];
+      }
+      else if (phase === "Testing") {
+        workout.mainLifts = [
+          {
+            name: "BENCH PRESS PR PROTOCOL",
+            sets: [
+              { setNum: 1, reps: 5, percentOfMax: 0.45, prReference: "benchPress", notes: "Warm-up" },
+              { setNum: 2, reps: 3, percentOfMax: 0.65, prReference: "benchPress", notes: "Warm-up" },
+              { setNum: 3, reps: 2, percentOfMax: 0.75, prReference: "benchPress", notes: "Warm-up" },
+              { setNum: 4, reps: 1, percentOfMax: 0.85, prReference: "benchPress", notes: "First working set" },
+              { setNum: 5, reps: 1, percentOfMax: 0.9, prReference: "benchPress", notes: "Second working set" },
+              { setNum: 6, reps: 1, percentOfMax: 0.95, prReference: "benchPress", notes: "Third working set" },
+              { setNum: 7, reps: 1, percentOfMax: 1.0, prReference: "benchPress", notes: "Current PR" },
+              { setNum: 8, reps: 1, percentOfMax: 1.025, prReference: "benchPress", notes: "New PR attempt" }
+            ],
+            isTestProtocol: true
+          }
+        ];
+        
+        workout.notes = [
+          "PR TESTING PROTOCOL:",
+          "- Warm up thoroughly with gradually increasing weights",
+          "- Take 3-5 minutes rest between sets above 85% of 1RM",
+          "- Have a spotter available for safety",
+          "- Record your PR attempts in the PR Tracker"
+        ];
+      }
+      else if (phase === "Hypertrophy" || phase === "Strength" || phase === "Peaking" || phase === "Pre-Test") {
+        // Similar pattern to other workout days
+        const weekInMeso = phase === "Hypertrophy" ? 
+          ((parseInt(week) <= 3) ? parseInt(week) : (parseInt(week) - 12)) :
+          phase === "Strength" ? 
+            ((parseInt(week) <= 6) ? (parseInt(week) - 3) : (parseInt(week) - 15)) :
+            ((parseInt(week) <= 10) ? (parseInt(week) - 7) : (parseInt(week) - 19));
+        
+        const reps = phase === "Hypertrophy" ? (10 - ((weekInMeso - 1) * 2)) : // 10->8->6
+                  phase === "Strength" ? (6 - (weekInMeso - 1)) : // 6->5->4
+                  phase === "Peaking" ? (4 - weekInMeso) : // 4->3->2
+                  3; // Pre-Test
+        
+        workout.mainLifts = [
+          {
+            name: "Bench Press",
+            sets: phase === "Pre-Test" ? 3 : (phase === "Peaking" ? (5 - (weekInMeso - 1)) : 4),
+            reps: reps,
+            percentOfMax: intensity,
+            prReference: "benchPress",
+            notes: phase === "Hypertrophy" ? "Control eccentric, 2 min rest" :
+                  "Explosive press, tight setup"
+          }
+        ];
+        
+        // Add variations based on phase
+        if (phase !== "Pre-Test") {
+          workout.mainLifts.push({
+            name: phase === "Hypertrophy" ? "Incline Bench Press" :
+                  phase === "Strength" ? "Close-Grip Bench" : 
+                  "Paused Bench Press",
+            sets: 3,
+            reps: reps,
+            percentOfMax: intensity - 0.05,
+            prReference: "benchPress",
+            notes: phase === "Peaking" ? "2-second pause" : "Full range of motion"
+          });
+        }
+        
+        // Add accessories appropriate to the phase
+        workout.accessoryWork = [
+          {
+            name: "Lat Pulldown",
+            sets: 3,
+            reps: phase === "Hypertrophy" ? 12 : 8,
+            intensity: phase === "Hypertrophy" ? "Medium" : "Heavy",
+            notes: "Engage lats fully"
+          },
+          {
+            name: "Dumbbell Row",
+            sets: 3,
+            reps: phase === "Hypertrophy" ? "12/12" : "8/8",
+            intensity: phase === "Hypertrophy" ? "Medium" : "Heavy",
+            notes: "Upper back focus"
+          },
+          {
+            name: phase === "Peaking" ? "Weighted Dips" : "Dips",
+            sets: 3,
+            reps: phase === "Hypertrophy" ? 12 : 8,
+            intensity: phase === "Peaking" ? "Add weight" : "Bodyweight",
+            notes: "Tricep emphasis"
+          }
+        ];
+        
+        workout.notes = [
+          `${phase.toUpperCase()} PHASE FOCUS:`,
+          phase === "Hypertrophy" ? "- Control the eccentric portion of each lift" :
+          phase === "Strength" ? "- Focus on bar speed and power" :
+          "- Perfect setup and execution",
+          "- Maintain tightness throughout the movement",
+          `- Rest ${phase === "Hypertrophy" ? "90-120" : phase === "Strength" ? "2-3" : "3"} minutes between main lifts`
+        ];
+      }
+      
       return workout;
     }
   };

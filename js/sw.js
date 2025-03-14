@@ -1,6 +1,23 @@
 // Service Worker for offline capability
 
-dvdstrengthapp.netlify.app
+const CACHE_NAME = 'strength-program-cache-v1';
+const urlsToCache = [
+  './',
+  './index.html',
+  './workout.html',
+  './progress.html',
+  './settings.html',
+  './css/styles.css',
+  './css/mobile.css',
+  './js/utils.js',
+  './js/program.js',
+  './js/storage.js',
+  './js/app.js',
+  './js/workout.js',
+  './js/progress.js',
+  './js/settings.js',
+  './manifest.json'
+];
 
 // Install service worker and cache assets
 self.addEventListener('install', function(event) {

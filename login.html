@@ -1,0 +1,65 @@
+<!-- filepath: login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Strength Program Tracker</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <div class="container">
+    <h1>Strength Program Tracker</h1>
+    
+    <div id="auth-container">
+      <div class="tabs">
+        <div id="login-tab" class="tab active">Login</div>
+        <div id="register-tab" class="tab">Register</div>
+      </div>
+      
+      <div id="login-form" class="auth-form">
+        <form id="login-form-element">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+          <p id="login-error" class="error-message"></p>
+        </form>
+      </div>
+      
+      <div id="register-form" class="auth-form" style="display: none;">
+        <form id="register-form-element">
+          <div class="form-group">
+            <label for="register-name">Name</label>
+            <input type="text" id="register-name" required>
+          </div>
+          <div class="form-group">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" required>
+          </div>
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" required minlength="8">
+          </div>
+          <div class="form-group">
+            <label for="register-confirm-password">Confirm Password</label>
+            <input type="password" id="register-confirm-password" required minlength="8">
+          </div>
+          <button type="submit" class="btn btn-primary">Register</button>
+          <p id="register-error" class="error-message"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

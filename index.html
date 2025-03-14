@@ -14,9 +14,20 @@
   <div class="app-container">
     <header>
       <h1>Strength Program</h1>
-      <div class="week-selector">
-        <label for="current-week">Week:</label>
-        <select id="current-week"></select>
+      <div class="header-controls">
+        <!-- Auth status will be shown/hidden by JavaScript -->
+        <div id="auth-status" style="display: none;">
+          <span id="user-name"></span>
+          <button id="logout-btn" class="small-button">Logout</button>
+        </div>
+        <div id="auth-buttons" style="display: none;">
+          <a href="login.html" class="text-button">Login</a>
+          <a href="register.html" class="text-button">Register</a>
+        </div>
+        <div class="week-selector">
+          <label for="current-week">Week:</label>
+          <select id="current-week"></select>
+        </div>
       </div>
     </header>
     
@@ -60,12 +71,14 @@
   <script src="js/utils.js"></script>
   <script src="js/program.js"></script>
   <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
   <script>
     // Register service worker for offline capability
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('./sw.js')
           .then(function(registration) {
             console.log('Service Worker registered with scope:', registration.scope);
           })

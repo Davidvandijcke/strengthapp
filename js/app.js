@@ -3,6 +3,9 @@
 // Run when document is ready
 document.addEventListener('DOMContentLoaded', function() {
     try {
+      // Check authentication status and update UI
+      updateAuthUI();
+      
       // Initialize dashboard
       initializeDashboard();
       
@@ -303,6 +306,12 @@ function setupEventListeners() {
     document.getElementById('update-prs').addEventListener('click', function() {
         window.location.href = 'settings.html';
     });
+
+    // Logout button
+    document.getElementById('logout-btn')?.addEventListener('click', function() {
+        AuthManager.logout();
+        updateAuthUI();
+    });
 }
 
 // Single function for navigating to workout page
@@ -317,4 +326,52 @@ function navigateToWorkout(week, day) {
     
     // Navigate to workout page
     window.location.href = 'workout.html';
+}
+
+// Function to update UI based on authentication status
+function updateAuthUI() {
+    const isAuthenticated = AuthManager.isAuthenticated();
+    const authStatus = document.getElementById('auth-status');
+    const authButtons = document.getElementById('auth-buttons');
+    
+    if (isAuthenticated) {
+        // User is logged in
+        authStatus.style.display = 'flex';
+        authButtons.style.display = 'none';
+        
+        // Set user name
+        const userData = AuthManager.getUserData();
+        if (userData && document.getElementById('user-name')) {
+            document.getElementById('user-name').textContent = userData.username || userData.email || 'User';
+        }
+        
+        // Sync data with server
+        syncUserDataWithServer();
+    } else {
+        // User is not logged in
+        authStatus.style.display = 'none';
+        authButtons.style.display = 'flex';
+    }
+}
+
+// Function to sync local data with server
+async function syncUserDataWithServer() {
+    try {
+        // If we're authenticated but don't have server data yet,
+        // fetch from server
+        if (!localStorage.getItem('server_synced')) {
+            await AuthManager.loadUserProgress();
+            localStorage.setItem('server_synced', 'true');
+        }
+        
+        // If we have local changes, push to server
+        const localChanges = JSON.parse(localStorage.getItem('unsyncedChanges') || '{}');
+        if (Object.keys(localChanges).length > 0) {
+            const apiService = new ApiService();
+            await apiService.updateUserProgress(localChanges);
+            localStorage.removeItem('unsyncedChanges');
+        }
+    } catch (error) {
+        console.error('Error syncing with server:', error);
+    }
 }
