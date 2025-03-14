@@ -2,7 +2,7 @@
     "name": "Strength Program Tracker",
     "short_name": "Strength App",
     "description": "A 24-week strength and hypertrophy program tracker",
-    "start_url": "/index.html",
+    "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#2c3e50",
