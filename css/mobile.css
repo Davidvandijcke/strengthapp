@@ -1,0 +1,78 @@
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+    header {
+      padding: 0.75rem;
+    }
+    
+    main {
+      padding: 0.75rem;
+    }
+    
+    h1 {
+      font-size: 1.25rem;
+    }
+    
+    h2 {
+      font-size: 1.1rem;
+    }
+    
+    .bottom-nav .nav-button {
+      font-size: 0.9rem;
+      padding: 0.75rem 0;
+    }
+    
+    .pr-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .timer-preset {
+      font-size: 0.9rem;
+      padding: 0.4rem;
+    }
+    
+    .form-group {
+      margin-bottom: 0.75rem;
+    }
+    
+    input, select {
+      padding: 0.6rem;
+    }
+    
+    .button-group {
+      flex-direction: column;
+    }
+    
+    .modal-content {
+      width: 95%;
+      margin: 20% auto;
+      padding: 1rem;
+    }
+  }
+  
+  /* Small Mobile Screens */
+  @media screen and (max-width: 375px) {
+    .info-bar {
+      flex-direction: column;
+    }
+    
+    .info-item {
+      border-right: none;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .info-item:last-child {
+      border-bottom: none;
+    }
+    
+    .pr-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .schedule-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .timer-controls {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }

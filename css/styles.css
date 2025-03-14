@@ -1,0 +1,495 @@
+/* Base Styles */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+    --success-color: #2ecc71;
+    --warning-color: #e74c3c;
+    --text-color: #333;
+    --light-text: #fff;
+    --border-color: #ddd;
+    --shadow: 0 2px 5px rgba(0,0,0,0.1);
+    --border-radius: 4px;
+    --header-height: 60px;
+    --footer-height: 60px;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: var(--text-color);
+    background-color: var(--light-color);
+    line-height: 1.6;
+  }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  ul, ol {
+    list-style: none;
+  }
+  
+  /* Layout */
+  .app-container {
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  header {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: var(--header-height);
+    box-shadow: var(--shadow);
+    z-index: 10;
+  }
+  
+  main {
+    flex: 1;
+    padding: 1rem;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-bottom: calc(var(--footer-height) + 1rem);
+  }
+  
+  section {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+  }
+  
+  /* Navigation */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: var(--footer-height);
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    z-index: 10;
+  }
+  
+  .bottom-nav .nav-button {
+    flex: 1;
+    text-align: center;
+    padding: 1rem 0;
+    color: var(--dark-color);
+    transition: all 0.3s ease;
+  }
+  
+  .bottom-nav .nav-button.active {
+    color: var(--secondary-color);
+    border-top: 3px solid var(--secondary-color);
+  }
+  
+  /* Typography */
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+  }
+  
+  /* Form Elements */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  input, select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+  }
+  
+  input[type="checkbox"] {
+    width: auto;
+    margin-right: 0.5rem;
+  }
+  
+  /* Buttons */
+  button {
+    cursor: pointer;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .primary-button {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    width: 100%;
+  }
+  
+  .secondary-button {
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--border-color);
+    width: 100%;
+  }
+  
+  .warning-button {
+    background-color: var(--warning-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    width: 100%;
+  }
+  
+  button:hover {
+    opacity: 0.9;
+  }
+  
+  button:active {
+    transform: scale(0.98);
+  }
+  
+  .icon-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--light-text);
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  /* Cards and Lists */
+  .card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .exercise-list li, .notes-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .exercise-list li:last-child, .notes-list li:last-child {
+    border-bottom: none;
+  }
+  
+  /* Dashboard Components */
+  .week-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .week-selector select {
+    background-color: var(--primary-color);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+  }
+  
+  .phase-progress-bar {
+    height: 8px;
+    background-color: var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+  }
+  
+  .progress-inner {
+    height: 100%;
+    background-color: var(--secondary-color);
+    width: 50%; /* Will be set via JS */
+  }
+  
+  .pr-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .pr-item {
+    background-color: var(--light-color);
+    padding: 0.75rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+  }
+  
+  .pr-label {
+    font-size: 0.9rem;
+    color: var(--dark-color);
+  }
+  
+  .pr-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .schedule-day {
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+    text-align: center;
+    background-color: var(--light-color);
+  }
+  
+  .schedule-day.active {
+    background-color: var(--secondary-color);
+    color: white;
+  }
+  
+  .schedule-day.completed {
+    background-color: var(--success-color);
+    color: white;
+  }
+  
+  /* Workout Page Components */
+  .info-bar {
+    display: flex;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  
+  .info-item {
+    flex: 1;
+    padding: 0.5rem;
+    text-align: center;
+    border-right: 1px solid var(--border-color);
+  }
+  
+  .info-item:last-child {
+    border-right: none;
+  }
+  
+  .info-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--dark-color);
+  }
+  
+  .info-value {
+    font-weight: 600;
+  }
+  
+  .exercise-card {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  
+  .exercise-header {
+    background-color: var(--light-color);
+    padding: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .exercise-name {
+    font-weight: 600;
+  }
+  
+  .exercise-detail {
+    padding: 0.75rem;
+  }
+  
+  .set-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .set-row:last-child {
+    border-bottom: none;
+  }
+  
+  .set-number {
+    width: 30px;
+    font-weight: 600;
+  }
+  
+  .set-weight {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .set-reps {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .set-completed {
+    width: 30px;
+  }
+  
+  .timer-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  /* Timer Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+  }
+  
+  .modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 500px;
+    box-shadow: var(--shadow);
+  }
+  
+  .close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .timer-display.large {
+    font-size: 2.5rem;
+    font-weight: 600;
+    justify-content: center;
+    margin: 1.5rem 0;
+  }
+  
+  .timer-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .timer-preset {
+    background-color: var(--light-color);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+  }
+  
+  .timer-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  /* Progress Page Components */
+  .chart-container {
+    height: 250px;
+    margin-bottom: 1rem;
+  }
+  
+  .pr-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .pr-table th, .pr-table td {
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+    text-align: left;
+  }
+  
+  .calendar-view {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  
+  .calendar-day {
+    aspect-ratio: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+    font-size: 0.8rem;
+  }
+  
+  .calendar-day.workout-day {
+    background-color: var(--secondary-color);
+    color: white;
+  }
+  
+  /* Settings Page Components */
+  .settings-form {
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Utility Classes */
+  .text-center {
+    text-align: center;
+  }
+  
+  .mt-1 {
+    margin-top: 0.5rem;
+  }
+  
+  .mb-1 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .hidden {
+    display: none;
+  }

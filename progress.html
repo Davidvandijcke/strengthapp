@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2c3e50">
+  <title>Progress | Strength Program</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/favicon.ico">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>Progress Tracking</h1>
+    </header>
+    
+    <main>
+      <section class="pr-progress">
+        <h2>PR Progress</h2>
+        <div class="chart-container">
+          <canvas id="pr-chart"></canvas>
+        </div>
+        <div class="pr-table" id="pr-history-table"></div>
+      </section>
+      
+      <section class="workout-history">
+        <h2>Workout History</h2>
+        <div class="calendar-view" id="workout-calendar"></div>
+      </section>
+      
+      <section class="volume-tracking">
+        <h2>Weekly Volume</h2>
+        <div class="chart-container">
+          <canvas id="volume-chart"></canvas>
+        </div>
+      </section>
+    </main>
+    
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-button">Dashboard</a>
+      <a href="workout.html" class="nav-button">Workout</a>
+      <a href="progress.html" class="nav-button active">Progress</a>
+      <a href="settings.html" class="nav-button">Settings</a>
+    </nav>
+  </div>
+  
+  <script src="js/utils.js"></script>
+  <script src="js/program.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/progress.js"></script>
+</body>
+</html>

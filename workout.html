@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2c3e50">
+  <title>Workout | Strength Program</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/favicon.ico">
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1 id="workout-title">Today's Workout</h1>
+      <div class="timer-display">
+        <span id="timer-value">00:00</span>
+        <button id="timer-toggle" class="icon-button">⏱️</button>
+      </div>
+    </header>
+    
+    <main>
+      <section class="workout-info">
+        <div class="info-bar">
+          <div class="info-item">
+            <span class="info-label">Week:</span>
+            <span id="week-display" class="info-value">1</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Day:</span>
+            <span id="day-display" class="info-value">1</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Phase:</span>
+            <span id="phase-display" class="info-value">Hypertrophy</span>
+          </div>
+        </div>
+      </section>
+      
+      <section class="warmup-section">
+        <h2>Warm-up</h2>
+        <ul id="warmup-list" class="exercise-list"></ul>
+      </section>
+      
+      <section class="main-lifts-section">
+        <h2>Primary Lifts</h2>
+        <div id="main-lifts-container"></div>
+      </section>
+      
+      <section class="accessory-section">
+        <h2>Accessory Work</h2>
+        <div id="accessory-container"></div>
+      </section>
+      
+      <section class="notes-section">
+        <h2>Notes</h2>
+        <ul id="notes-list" class="notes-list"></ul>
+      </section>
+      
+      <div class="workout-controls">
+        <button id="complete-workout" class="primary-button">Complete Workout</button>
+      </div>
+    </main>
+    
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-button">Dashboard</a>
+      <a href="workout.html" class="nav-button active">Workout</a>
+      <a href="progress.html" class="nav-button">Progress</a>
+      <a href="settings.html" class="nav-button">Settings</a>
+    </nav>
+  </div>
+  
+  <div id="timer-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Rest Timer</h2>
+      <div class="timer-display large">
+        <span id="modal-timer-value">00:00</span>
+      </div>
+      <div class="timer-controls">
+        <button id="timer-30" class="timer-preset">0:30</button>
+        <button id="timer-60" class="timer-preset">1:00</button>
+        <button id="timer-90" class="timer-preset">1:30</button>
+        <button id="timer-120" class="timer-preset">2:00</button>
+        <button id="timer-180" class="timer-preset">3:00</button>
+        <button id="timer-300" class="timer-preset">5:00</button>
+      </div>
+      <div class="timer-buttons">
+        <button id="timer-start" class="primary-button">Start</button>
+        <button id="timer-pause" class="secondary-button">Pause</button>
+        <button id="timer-reset" class="secondary-button">Reset</button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="js/utils.js"></script>
+  <script src="js/program.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/workout.js"></script>
+</body>
+</html>
