@@ -23,6 +23,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Load and display workout
 function loadWorkout(week, day) {
+  // Parse week and day as integers
+  week = parseInt(week, 10);
+  day = parseInt(day, 10);
+  
+  console.log('Loading workout for week:', week, 'day:', day);
   // Get workout data and PRs
   const workout = programData.generateWorkout(week, day, StorageManager.getPRs());
   const settings = StorageManager.getSettings();

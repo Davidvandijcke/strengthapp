@@ -166,10 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const startButton = document.getElementById('start-workout');
         startButton.textContent = isCompleted ? 'Review Workout' : 'Start Workout';
         startButton.onclick = function() {
-          // Store current day in session storage for the workout page to use
-          sessionStorage.setItem('currentWorkoutWeek', week);
-          sessionStorage.setItem('currentWorkoutDay', dayOfWeek);
-          window.location.href = 'workout.html';
+          showTodaysWorkout(week, dayOfWeek);
         };
       }
     } else {
@@ -183,15 +180,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const startButton = document.getElementById('start-workout');
       startButton.textContent = 'View Next Workout';
       startButton.onclick = function() {
-        sessionStorage.setItem('currentWorkoutWeek', week);
-        sessionStorage.setItem('currentWorkoutDay', 1); // Monday
-        window.location.href = 'workout.html';
+        showTodaysWorkout(week, 1); // Monday
       };
     }
   }
   
   // Show weekly schedule
   function showWeeklySchedule(week) {
+    week = parseInt(week, 10);
     const scheduleGrid = document.getElementById('weekly-schedule');
     scheduleGrid.innerHTML = '';
     
@@ -219,9 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Make clickable
       dayElement.addEventListener('click', function() {
-        sessionStorage.setItem('currentWorkoutWeek', week);
-        sessionStorage.setItem('currentWorkoutDay', i);
-        window.location.href = 'workout.html';
+        showTodaysWorkout(week, i);
       });
       
       scheduleGrid.appendChild(dayElement);
@@ -243,4 +237,18 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('update-prs').addEventListener('click', function() {
       window.location.href = 'settings.html';
     });
+  }
+  
+  // In the showTodaysWorkout function
+  function showTodaysWorkout(week, day) {
+    // Ensure week and day are numbers
+    week = parseInt(week, 10);
+    day = parseInt(day, 10);
+    
+    // Store in session for the workout page
+    sessionStorage.setItem('currentWorkoutWeek', week);
+    sessionStorage.setItem('currentWorkoutDay', day);
+    
+    // Navigate to workout page
+    window.location.href = 'workout.html';
   }
